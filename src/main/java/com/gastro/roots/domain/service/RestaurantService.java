@@ -2,11 +2,14 @@ package com.gastro.roots.domain.service;
 
 import com.gastro.roots.api.model.RestaurantSummaryDTO;
 import com.gastro.roots.api.model.input.RestaurantInput;
+import com.gastro.roots.domain.dto.PaymentFormDTO;
 import com.gastro.roots.domain.dto.RestaurantDTO;
 import com.gastro.roots.domain.service.exception.RestaurantNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import java.util.Set;
 
 public interface RestaurantService {
 
@@ -26,6 +29,14 @@ public interface RestaurantService {
      * @throws RestaurantNotFoundException if no restaurant is found with the given ID
      */
     RestaurantDTO findById(Long id);
+
+    /**
+     * Restrieves a list of payment form according the restaurant ID.
+     *
+     * @param restaurantId the ID of the restaurant to update
+     * @return
+     */
+    Set<PaymentFormDTO> listPaytmentsForm(Long restaurantId);
 
     /**
      * Retrieves a paginated list of all restaurants.

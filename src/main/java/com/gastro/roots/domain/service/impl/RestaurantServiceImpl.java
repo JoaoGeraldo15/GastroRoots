@@ -2,9 +2,11 @@ package com.gastro.roots.domain.service.impl;
 
 import com.gastro.roots.api.model.RestaurantSummaryDTO;
 import com.gastro.roots.api.model.input.RestaurantInput;
+import com.gastro.roots.domain.dto.PaymentFormDTO;
 import com.gastro.roots.domain.dto.RestaurantDTO;
 import com.gastro.roots.domain.entity.Kitchen;
 import com.gastro.roots.domain.entity.Restaurant;
+import com.gastro.roots.domain.mapper.PaymentFormMapper;
 import com.gastro.roots.domain.mapper.RestaurantMapper;
 import com.gastro.roots.domain.repository.RestaurantRepository;
 import com.gastro.roots.domain.service.KitchenService;
@@ -16,12 +18,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Set;
+
 @Service
 @RequiredArgsConstructor
 public class RestaurantServiceImpl implements RestaurantService {
 
     private final RestaurantRepository repository;
     private final RestaurantMapper mapper;
+    private final PaymentFormMapper paymentFormMapper;
     private final KitchenService kitchenService;
 
 
@@ -44,6 +49,12 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Transactional(readOnly = true)
     public RestaurantDTO findById(Long id) {
         return mapper.toDTO(findEntityOrThrow(id));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Set<PaymentFormDTO> listPaytmentsForm(Long id) {
+        return paymentFormMapper.toDTO(findEntityOrThrow(id).getPaymentsForm());
     }
 
     @Override
