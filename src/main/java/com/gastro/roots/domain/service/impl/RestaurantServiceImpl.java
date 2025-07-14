@@ -65,6 +65,21 @@ public class RestaurantServiceImpl implements RestaurantService {
         return mapper.toDTO(repository.save(entity));
     }
 
+
+    @Override
+    @Transactional
+    public void activate(Long id) {
+        Restaurant entity = findEntityOrThrow(id);
+        entity.activate();
+    }
+
+    @Override
+    @Transactional
+    public void deactivate(Long id) {
+        Restaurant entity = findEntityOrThrow(id);
+        entity.deactivate();
+    }
+
     @Override
     @Transactional
     public void delete(Long id) {
