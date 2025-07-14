@@ -14,7 +14,7 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,7 +31,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 .title("Entity Not Found")
                 .detail(ex.getMessage())
                 .path(request.getRequest().getRequestURI())
-                .timestamp(LocalDateTime.now())
+                .timestamp(OffsetDateTime.now())
                 .build();
 
         return handleExceptionInternal(ex, body, new HttpHeaders(), status, request);
@@ -47,7 +47,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 .title("Business Rule Violation")
                 .detail(ex.getMessage())
                 .path(request.getRequest().getRequestURI())
-                .timestamp(LocalDateTime.now())
+                .timestamp(OffsetDateTime.now())
                 .build();
 
         return handleExceptionInternal(ex, body, new HttpHeaders(), status, request);
@@ -63,7 +63,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 .title("Entity In Use")
                 .detail(ex.getMessage())
                 .path(request.getRequest().getRequestURI())
-                .timestamp(LocalDateTime.now())
+                .timestamp(OffsetDateTime.now())
                 .build();
 
         return handleExceptionInternal(ex, body, new HttpHeaders(), status, request);
@@ -90,7 +90,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 .title("Invalid Data")
                 .detail("One or more fields are invalid. Please correct them and try again")
                 .path(path)
-                .timestamp(LocalDateTime.now())
+                .timestamp(OffsetDateTime.now())
                 .fields(erros)
                 .build();
 
@@ -110,7 +110,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                     .status(status.value())
                     .title(((HttpStatus) status).getReasonPhrase())
                     .path(path)
-                    .timestamp(LocalDateTime.now())
+                    .timestamp(OffsetDateTime.now())
                     .build();
 
         } else if (body instanceof String) {
@@ -118,7 +118,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                     .status(status.value())
                     .title((String) body)
                     .path(path)
-                    .timestamp(LocalDateTime.now())
+                    .timestamp(OffsetDateTime.now())
                     .build();
         }
 

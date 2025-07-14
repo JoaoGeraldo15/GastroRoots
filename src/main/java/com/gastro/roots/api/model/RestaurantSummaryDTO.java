@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Getter
 @Setter
@@ -16,8 +16,8 @@ public class RestaurantSummaryDTO {
     private BigDecimal deliveryFee;
     private Boolean isActive;
     private Boolean isOpen;
-    private LocalDateTime registrationDate;
-    private LocalDateTime updateDate;
+    private OffsetDateTime registrationDate;
+    private OffsetDateTime updateDate;
     private KitchenDTO kitchen;
 
 }
