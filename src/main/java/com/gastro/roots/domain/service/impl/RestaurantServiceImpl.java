@@ -5,11 +5,13 @@ import com.gastro.roots.api.model.input.RestaurantInput;
 import com.gastro.roots.domain.dto.PaymentFormDTO;
 import com.gastro.roots.domain.dto.RestaurantDTO;
 import com.gastro.roots.domain.entity.Kitchen;
+import com.gastro.roots.domain.entity.PaymentForm;
 import com.gastro.roots.domain.entity.Restaurant;
 import com.gastro.roots.domain.mapper.PaymentFormMapper;
 import com.gastro.roots.domain.mapper.RestaurantMapper;
 import com.gastro.roots.domain.repository.RestaurantRepository;
 import com.gastro.roots.domain.service.KitchenService;
+import com.gastro.roots.domain.service.PaymentFormService;
 import com.gastro.roots.domain.service.RestaurantService;
 import com.gastro.roots.domain.service.exception.RestaurantNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +30,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     private final RestaurantMapper mapper;
     private final PaymentFormMapper paymentFormMapper;
     private final KitchenService kitchenService;
+    private final PaymentFormService paymentFormService;
 
 
     @Override
@@ -76,7 +79,6 @@ public class RestaurantServiceImpl implements RestaurantService {
         return mapper.toDTO(repository.save(entity));
     }
 
-
     @Override
     @Transactional
     public void activate(Long id) {
@@ -96,6 +98,22 @@ public class RestaurantServiceImpl implements RestaurantService {
     public void delete(Long id) {
         Restaurant entity = findEntityOrThrow(id);
         repository.delete(entity);
+    }
+
+    @Override
+    @Transactional
+    public void removePaymentForm(Long restaurantId, Long paymentFormId) {
+        Restaurant entity = findEntityOrThrow(restaurantId);
+        PaymentForm paymentForm = paymentFormService.findEntityById(paymentFormId);
+        entity.getPaymentsForm().remove(paymentForm);
+    }
+
+    @Override
+    @Transactional
+    public void addPaymentForm(Long restaurantId, Long paymentFormId) {
+        Restaurant entity = findEntityOrThrow(restaurantId);
+        PaymentForm paymentForm = paymentFormService.findEntityById(paymentFormId);
+        entity.getPaymentsForm().add(paymentForm);
     }
 
     private Restaurant findEntityOrThrow(Long id) {

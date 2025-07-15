@@ -4,10 +4,12 @@ import com.gastro.roots.api.model.RestaurantSummaryDTO;
 import com.gastro.roots.api.model.input.RestaurantInput;
 import com.gastro.roots.domain.dto.PaymentFormDTO;
 import com.gastro.roots.domain.dto.RestaurantDTO;
+import com.gastro.roots.domain.service.exception.PaymentFormNotFoundException;
 import com.gastro.roots.domain.service.exception.RestaurantNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
 
@@ -79,4 +81,24 @@ public interface RestaurantService {
      * @throws RestaurantNotFoundException if no restaurant is found with the given ID
      */
     void delete(Long id);
+
+    /**
+     * Adds a payment form to the specified restaurant.
+     *
+     * @param restaurantId the ID of the restaurant to which the payment form will be added
+     * @param paymentFormId the ID of the payment form to be added
+     * @throws PaymentFormNotFoundException if the restaurant is not found
+     * @throws PaymentFormNotFoundException if the payment form is not found
+     */
+    void removePaymentForm(Long restaurantId, Long paymentFormId);
+
+    /**
+     * Removes a payment form from the specified restaurant.
+     *
+     * @param restaurantId the ID of the restaurant from which the payment form will be removed
+     * @param paymentFormId the ID of the payment form to be removed
+     * @throws PaymentFormNotFoundException if the restaurant is not found
+     * @throws PaymentFormNotFoundException if the payment form is not found
+     */
+    void addPaymentForm(Long restaurantId, Long paymentFormId);
 }
