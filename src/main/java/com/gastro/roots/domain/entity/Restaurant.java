@@ -19,7 +19,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -36,6 +36,9 @@ public class Restaurant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "EXTERNAL_ID")
+    private String externalId;
+
     @Column(name = "NAME")
     private String name;
 
@@ -50,11 +53,11 @@ public class Restaurant {
 
     @CreationTimestamp
     @Column(name = "REGISTRATION_DATE")
-    private LocalDateTime registrationDate;
+    private OffsetDateTime registrationDate;
 
     @UpdateTimestamp
     @Column(name = "UPDATE_DATE")
-    private LocalDateTime updateDate;
+    private OffsetDateTime updateDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "KITCHEN_ID", nullable = false)
@@ -68,4 +71,20 @@ public class Restaurant {
             joinColumns = @JoinColumn(name = "RESTAURANT_ID"),
             inverseJoinColumns = @JoinColumn(name = "PAYMENT_FORM_ID"))
     private Set<PaymentForm> paymentsForm = new HashSet<>();
+
+    public void activate() {
+        setIsActive(true);
+    }
+
+    public void deactivate() {
+        setIsActive(false);
+    }
+
+    public void open() {
+        setIsOpen(true);
+    }
+
+    public void close() {
+        setIsOpen(false);
+    }
 }
