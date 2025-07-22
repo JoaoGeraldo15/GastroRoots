@@ -36,6 +36,9 @@ public class Restaurant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "EXTERNAL_ID")
+    private String externalId;
+
     @Column(name = "NAME")
     private String name;
 
@@ -75,5 +78,13 @@ public class Restaurant {
 
     public void deactivate() {
         setIsActive(false);
+    }
+
+    public void open() {
+        setIsOpen(true);
+    }
+
+    public void close() {
+        setIsOpen(false);
     }
 }

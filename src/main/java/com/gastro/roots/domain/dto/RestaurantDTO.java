@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 public class RestaurantDTO {
 
-    private Long id;
+    private Long externalId;
     private String name;
     private BigDecimal deliveryFee;
     private Boolean isActive;

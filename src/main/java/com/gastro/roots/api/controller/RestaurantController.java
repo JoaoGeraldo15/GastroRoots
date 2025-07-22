@@ -31,9 +31,9 @@ public class RestaurantController {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(input));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<RestaurantDTO> findById(@PathVariable Long id) {
-        return ResponseEntity.ok(service.findById(id));
+    @GetMapping("/{externalId}")
+    public ResponseEntity<RestaurantDTO> findById(@PathVariable Long externalId) {
+        return ResponseEntity.ok(service.findById(externalId));
     }
 
     @GetMapping
@@ -41,26 +41,38 @@ public class RestaurantController {
         return service.findAll(pageable);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<RestaurantDTO> update(@PathVariable Long id, @RequestBody @Valid RestaurantInput input) {
-        return ResponseEntity.ok(service.update(id, input));
+    @PutMapping("/{externalId}")
+    public ResponseEntity<RestaurantDTO> update(@PathVariable Long externalId, @RequestBody @Valid RestaurantInput input) {
+        return ResponseEntity.ok(service.update(externalId, input));
     }
 
-    @PutMapping("/{id}/activate")
-    public ResponseEntity<Void> activate(@PathVariable Long id) {
-        service.activate(id);
+    @PutMapping("/{externalId}/activate")
+    public ResponseEntity<Void> activate(@PathVariable Long externalId) {
+        service.activate(externalId);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}/deactivate")
-    public ResponseEntity<Void> deactivate(@PathVariable Long id) {
-        service.deactivate(id);
+    @DeleteMapping("/{externalId}/deactivate")
+    public ResponseEntity<Void> deactivate(@PathVariable Long externalId) {
+        service.deactivate(externalId);
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        service.delete(id);
+    @PutMapping("/{externalId}/open")
+    public ResponseEntity<Void> open(@PathVariable Long externalId) {
+        service.open(externalId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{externalId}/close")
+    public ResponseEntity<Void> close(@PathVariable Long externalId) {
+        service.close(externalId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{externalId}")
+    public ResponseEntity<Void> delete(@PathVariable Long externalId) {
+        service.delete(externalId);
         return ResponseEntity.noContent().build();
     }
 }

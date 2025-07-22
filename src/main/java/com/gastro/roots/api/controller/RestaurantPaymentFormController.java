@@ -24,7 +24,7 @@ public class RestaurantPaymentFormController {
 
     @GetMapping
     public ResponseEntity<Set<PaymentFormDTO>> list(@PathVariable Long restaurantId) {
-        return ResponseEntity.ok(service.listPaytmentsForm(restaurantId));
+        return ResponseEntity.ok(service.listPaymentForms(restaurantId));
     }
 
     @PutMapping("/{paymentFormId}")

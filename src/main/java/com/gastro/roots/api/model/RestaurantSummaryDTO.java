@@ -11,7 +11,7 @@ import java.time.OffsetDateTime;
 @Setter
 public class RestaurantSummaryDTO {
 
-    private Long id;
+    private Long externalId;
     private String name;
     private BigDecimal deliveryFee;
     private Boolean isActive;

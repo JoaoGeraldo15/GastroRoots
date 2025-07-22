@@ -13,6 +13,8 @@ import com.gastro.roots.domain.repository.RestaurantRepository;
 import com.gastro.roots.domain.service.KitchenService;
 import com.gastro.roots.domain.service.PaymentFormService;
 import com.gastro.roots.domain.service.RestaurantService;
+import com.gastro.roots.domain.service.exception.InvalidBusinessOperationException;
+import com.gastro.roots.domain.service.exception.KitchenNotFoundException;
 import com.gastro.roots.domain.service.exception.RestaurantNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -37,9 +39,17 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Transactional
     public RestaurantDTO create(RestaurantInput input) {
         Restaurant entity = mapper.toEntity(input);
+        try {
 
-        Kitchen kitchen = kitchenService.findEntityOrThrow(input.getKitchenId());
-        entity.setKitchen(kitchen);
+            Kitchen kitchen = kitchenService.findEntityOrThrow(input.getKitchenId());
+            entity.setKitchen(kitchen);
+
+        } catch (KitchenNotFoundException ex) {
+            throw new InvalidBusinessOperationException(
+                    String.format("Cannot create a Restaurant: Kitchen with ID: %d does not exist.",
+                            input.getKitchenId())
+            );
+        }
 
         final Restaurant finalEntity = entity;
         entity.getAddresses().forEach(a -> a.setRestaurant(finalEntity));
@@ -50,14 +60,14 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     @Transactional(readOnly = true)
-    public RestaurantDTO findById(Long id) {
-        return mapper.toDTO(findEntityOrThrow(id));
+    public RestaurantDTO findById(Long externalId) {
+        return mapper.toDTO(findEntityOrThrow(externalId));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Set<PaymentFormDTO> listPaytmentsForm(Long id) {
-        return paymentFormMapper.toDTO(findEntityOrThrow(id).getPaymentsForm());
+    public Set<PaymentFormDTO> listPaymentForms(Long externalId) {
+        return paymentFormMapper.toDTO(findEntityOrThrow(externalId).getPaymentsForm());
     }
 
     @Override
@@ -68,9 +78,22 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     @Transactional
-    public RestaurantDTO update(Long id, RestaurantInput input) {
+    public RestaurantDTO update(Long externalId, RestaurantInput input) {
 
-        Restaurant entity = findEntityOrThrow(id);
+        Restaurant entity = findEntityOrThrow(externalId);
+
+        try {
+
+            Kitchen kitchen = kitchenService.findEntityOrThrow(input.getKitchenId());
+            entity.setKitchen(kitchen);
+
+        } catch (KitchenNotFoundException ex) {
+            throw new InvalidBusinessOperationException(
+                    String.format("Cannot update a Restaurant: Kitchen with ID: %d does not exist.",
+                            input.getKitchenId())
+            );
+        }
+
         mapper.updateEntityFromInput(entity, input);
 
         final Restaurant finalEntity = entity;
@@ -81,39 +104,53 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     @Transactional
-    public void activate(Long id) {
-        Restaurant entity = findEntityOrThrow(id);
+    public void activate(Long externalId) {
+        Restaurant entity = findEntityOrThrow(externalId);
         entity.activate();
     }
 
     @Override
     @Transactional
-    public void deactivate(Long id) {
-        Restaurant entity = findEntityOrThrow(id);
+    public void deactivate(Long externalId) {
+        Restaurant entity = findEntityOrThrow(externalId);
         entity.deactivate();
     }
 
     @Override
     @Transactional
-    public void delete(Long id) {
-        Restaurant entity = findEntityOrThrow(id);
+    public void delete(Long externalId) {
+        Restaurant entity = findEntityOrThrow(externalId);
         repository.delete(entity);
     }
 
     @Override
     @Transactional
-    public void removePaymentForm(Long restaurantId, Long paymentFormId) {
-        Restaurant entity = findEntityOrThrow(restaurantId);
+    public void removePaymentForm(Long externalId, Long paymentFormId) {
+        Restaurant entity = findEntityOrThrow(externalId);
         PaymentForm paymentForm = paymentFormService.findEntityById(paymentFormId);
         entity.getPaymentsForm().remove(paymentForm);
     }
 
     @Override
     @Transactional
-    public void addPaymentForm(Long restaurantId, Long paymentFormId) {
-        Restaurant entity = findEntityOrThrow(restaurantId);
+    public void addPaymentForm(Long externalId, Long paymentFormId) {
+        Restaurant entity = findEntityOrThrow(externalId);
         PaymentForm paymentForm = paymentFormService.findEntityById(paymentFormId);
         entity.getPaymentsForm().add(paymentForm);
+    }
+
+    @Override
+    @Transactional
+    public void open(Long externalId) {
+        Restaurant entity = findEntityOrThrow(externalId);
+        entity.open();
+    }
+
+    @Override
+    @Transactional
+    public void close(Long externalId) {
+        Restaurant entity = findEntityOrThrow(externalId);
+        entity.close();
     }
 
     private Restaurant findEntityOrThrow(Long id) {
